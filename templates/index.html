@@ -1,0 +1,143 @@
+<html>
+	<head>
+		<!-- Make a title -->
+		<title>HackPlanner: a planner for Hackathons using MongoDB</title>
+		<!-- Since we don't have a lot of styling going on, we can just add our stylesheet inside of the .html file -->
+		<style>
+		<!-- This makes sure that the body takes up the whole screen -->
+		body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+		}
+		<!-- Next, we want to center the project header-->
+		h1 {text-align: center}
+		<!-- Padding the divisions of the document with space will make it easier to look at -->
+		div {padding: 10px}
+		<!-- Creating the table in this way ensures that our words will not overflow from the document -->
+		table {
+			table-layout: fixed;
+			word-wrap: break-word;
+		}
+		<!-- Here, we are dividing the table into equal parts -->
+		tr {width: 900px}
+		th {
+			width: 300px;
+			text-decoration: underline;
+			padding-bottom: 10px;
+		}
+		td {width: 300px}
+		<!-- This adds a border (where we want it) to a cell in the table -->
+		#border {border-bottom: 1px solid black}
+		<!-- Changing the background color on our "tech" division to make it easier to look at our app -->
+		#tech {background-color: #ededed}
+		</style>		
+	</head>
+	<body>
+	<!-- It is always a good practice to place a container around your divisions in case you want to style it later -->
+	<div id="container">
+		<!-- This division places the header up top -->
+		<div id="head"><h1>HackPlanner</h1></div>
+		<!-- Next, we'll have the ideas section -->
+		<div id="ideas">
+		<h2>Hack Ideas</h2>
+		<!-- Here's where we will start the table and label its columns -->
+		<table>
+			<tr>
+				<th>(Potential) Hack Title</th>
+				<th>Brief Description</th>
+				<th>Potential Collaborators</th>
+			</tr>
+			<!-- This 'for' loop runs through each entry in the MongoDB collection and adds it to the table -->
+			{% for hack_idea in hack_ideas %}
+			<tr>
+				<td id="border"> {{ hack_idea["potential_title"] }} </td>
+				<td id="border"> {{ hack_idea["brief_description"] }} </td>
+				<td id="border"> {{ hack_idea["potential_collaborators"]}} </td>
+				<!-- Here, we can remove an entry from the database -->
+				<td><a href="./remove_idea?_id={{ hack_idea['_id'] }}"><button type="submit">-</button></a></td>
+			</tr>
+			{% endfor %}
+		</table>
+		<!-- This next section will allow us to add a new entry to the database using something called a POST request -->
+		<h3> Add an Idea... </h3>
+		<form action="/add_idea" method="POST">
+		<table>
+			<tr>
+				<!-- these prompts are where the user would enter in their preferred information -->
+				<td><input type="text" name="potential_title" placeholder="a potential hack titled..."></td>
+				<td><textarea name="brief_description" placeholder="describe the hack here   "></textarea></td>
+				<td><textarea name="potential_collaborators" placeholder="who wants to help?"></textarea></td>
+				<!-- and this button is what they would press to submit it! -->
+				<td><button type="submit"> + </button></td>
+			</tr>
+		</table>
+		</form>
+		</div>
+		
+		<!-- this division is identical to the previous one, so follow the above comments for any questions -->
+		<div id="tech">
+		<h2>Cool Technology</h2>
+		<table>
+			<tr>
+				<th>Technology Name</th>
+				<th>Documentation</th>
+				<th>Description / Use Cases</th>
+			</tr>
+			{% for cool_tech in cool_techs %}
+			<tr>
+				<td id="border"> {{ cool_tech["name"] }} </td>
+				<td id="border"> {{ cool_tech["website_docs"] }} </td>
+				<td id="border"> {{ cool_tech["potential_use_cases"]}} </td>
+				<td><a href="./remove_tech?_id={{ cool_tech['_id'] }}"><button type="submit">-</button></a></td>
+			</tr>
+			{% endfor %}
+		</table>
+		
+		<h3> Add a Technology... </h3>
+		<form action="/add_tech" method="POST">
+		<table>
+			<tr>
+				<td><input type="text" name="name" placeholder="what is it called?"></td>
+				<td><textarea name="website_docs" placeholder="paste the docs here"></textarea></td>
+				<td><textarea name="potential_use_cases" placeholder="how can you use it?"></textarea></td>
+				<td><button type="submit"> + </button></td>
+			</tr>
+		</table>
+		</form>
+		</div>
+		
+		<!-- this division is identical to the previous one, so follow the above comments for any questions -->
+		<div id="lessons">
+		<h2>Lessons Learned</h2>
+		<table>
+			<tr>
+				<th>Date</th>
+				<th>Hackathon / Link to Devpost</th>
+				<th>Lessons / Notes</th>
+			</tr>
+			{% for lesson_learned in lessons_learned %}
+			<tr>
+				<td id="border"> {{ lesson_learned["date"] }} </td>
+				<td id="border"> {{ lesson_learned["devpost_link"] }} </td>
+				<td id="border"> {{ lesson_learned["notes"]}} </td>
+				<td><a href="./remove_lesson?_id={{ lesson_learned['_id'] }}"><button type="submit">-</button></a></td>
+			</tr>
+			{% endfor %}
+		</table>
+		
+		<h3> Remember something for next time... </h3>
+		<form action="/add_lesson" method="POST">
+		<table>
+			<tr>
+				<td><input type="text" name="date" placeholder="what date?"></td>
+				<td><textarea name="devpost_link" placeholder="at what hackathon? (devpost link optional)"></textarea></td>
+				<td><textarea name="notes" placeholder="what did you learn?"></textarea></td>
+				<td><button type="submit"> + </button></td>
+			</tr>
+		</table>
+		</form>
+		</div>
+	</div>
+	</body>
+</html>
